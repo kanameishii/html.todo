@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   <style>
+    .container {
+      margin: 0 auto;
+      max-width: 480px;
+    }
   </style>
 </head>
 <body>
@@ -36,6 +40,58 @@
   </section>
 
   <script>
+  function get_todos() {
+    var todos = new Array;
+    var todos_str = localStorage.getItem('todo');
+    if(todos_str !== null) {
+      todos = JSON.parse(todos_str);
+    }
+    return todos;
+  }
+    
+    function add() {
+      var task = document.getElementById('task').value;
+      
+      var todos = get_todos();
+      todos.push(task);
+      localStorage.setItem('todo',JSON.stringify(todos));
+      
+      show();
+      
+      return false;
+    }
+    
+    function remove() {
+      var id = this.getAttribute('id');
+      var todos = get_todos();
+      todos.splice(id,1);
+      localStrage.setItem('todo',JSON.stringify(todos));
+      
+      show();
+      
+      return false;
+    }
+    
+    function show() {
+      var todos = get_todos();
+      
+      var html = '';
+      for(var i = 0; i<todos.length; i++) {
+        html += '<a class ="panel-block"><span class = "panel-icon remove" id = "' + i + '"><i class = "fas fa-trash-alt" aria-hidden = "true"></i></span>' + todos[i] + '</a>';
+      };
+      html +='';
+      
+      document.getElementById('todos').innerHTML = html;
+      document.getElementById('task').value = "";
+      
+      var buttons = document.getElementsByClassName('remove');
+      for (var i = 0; i < buttons.lenght; i++) {
+        buttons[i].addEventListener('click',remove);
+      };
+    }
+    
+    document.getElementById('add').addEventListener('click',add);
+        show();
   </script>
 
 </body>
